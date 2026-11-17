@@ -1,0 +1,240 @@
+package calculadora;
+
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+
+	// aluno: Gabriel Pereira da Silva
+	//Ra: 0025613
+	//Atividade: Poo-Calculadora
+
+public class calculadora {
+
+    private JFrame frame;
+    private JTextField textField;
+
+    private double primeiroNumero = 0;
+    private String operador = "";
+    private boolean novoNumero = true;
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    calculadora window = new calculadora();
+                    window.frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public calculadora() {
+        initialize();
+    }
+
+    private void initialize() {
+
+        frame = new JFrame();
+        frame.setTitle("Calculadora");
+        frame.setBounds(100, 100, 450, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.getContentPane().setBackground(new Color(255, 255, 128));
+        frame.getContentPane().setLayout(new BorderLayout(5, 5));
+
+        textField = new JTextField();
+        textField.setText("0");
+        textField.setEditable(false);
+        textField.setHorizontalAlignment(SwingConstants.RIGHT);
+        textField.setFont(new Font("Arial", Font.PLAIN, 24));
+
+        frame.getContentPane().add(textField, BorderLayout.NORTH);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 5, 5, 5));
+
+        frame.getContentPane().add(panel, BorderLayout.CENTER);
+
+
+        JButton btnNewButton_1 = new JButton("7");
+        JButton btnNewButton_2 = new JButton("8");
+        JButton btnNewButton_7 = new JButton("9");
+
+        JButton btnNewButton_4 = new JButton("4");
+        JButton btnNewButton_15 = new JButton("5");
+        JButton btnNewButton_10 = new JButton("6");
+
+        JButton btnNewButton_3 = new JButton("1");
+        JButton btnNewButton_11 = new JButton("2");
+        JButton btnNewButton_14 = new JButton("3");
+
+        JButton btnNewButton_9 = new JButton("0");
+
+        JButton btnNewButton_12 = new JButton("/");
+        JButton btnNewButton_8 = new JButton("*");
+        JButton btnNewButton_13 = new JButton("-");
+        JButton btnNewButton_5 = new JButton("+");
+        JButton btnPotencia = new JButton("^");
+
+
+        JButton btnNewButton_6 = new JButton("=");
+        JButton btnNewButton = new JButton("C");
+
+
+        panel.add(btnNewButton_1);
+        panel.add(btnNewButton_2);
+        panel.add(btnNewButton_7);
+        panel.add(btnNewButton_12);
+        panel.add(btnNewButton);
+
+        panel.add(btnNewButton_4);
+        panel.add(btnNewButton_15);
+        panel.add(btnNewButton_10);
+        panel.add(btnNewButton_8);
+        panel.add(btnPotencia);
+
+        panel.add(btnNewButton_3);
+        panel.add(btnNewButton_11);
+        panel.add(btnNewButton_14);
+        panel.add(btnNewButton_13);
+        panel.add(btnNewButton_6);
+
+        panel.add(btnNewButton_9);
+        panel.add(btnNewButton_5);
+
+
+        JButton[] botoes = {
+            btnNewButton_1, btnNewButton_2, btnNewButton_7,
+            btnNewButton_4, btnNewButton_15, btnNewButton_10,
+            btnNewButton_3, btnNewButton_11, btnNewButton_14,
+            btnNewButton_9, btnNewButton_12, btnNewButton_8,
+            btnNewButton_13, btnNewButton_5, btnPotencia,
+            btnNewButton_6, btnNewButton
+        };
+
+        for (JButton botao : botoes) {
+            botao.setFont(new Font("Arial", Font.BOLD, 18));
+        }
+
+        ActionListener numeroListener = e -> {
+
+            JButton botao = (JButton) e.getSource();
+            String numero = botao.getText();
+
+            if (novoNumero) {
+                textField.setText(numero);
+                novoNumero = false;
+            } else {
+                textField.setText(textField.getText() + numero);
+            }
+        };
+
+
+        btnNewButton_1.addActionListener(numeroListener);
+        btnNewButton_2.addActionListener(numeroListener);
+        btnNewButton_7.addActionListener(numeroListener);
+
+        btnNewButton_4.addActionListener(numeroListener);
+        btnNewButton_15.addActionListener(numeroListener);
+        btnNewButton_10.addActionListener(numeroListener);
+
+        btnNewButton_3.addActionListener(numeroListener);
+        btnNewButton_11.addActionListener(numeroListener);
+        btnNewButton_14.addActionListener(numeroListener);
+
+        btnNewButton_9.addActionListener(numeroListener);
+
+
+        ActionListener operacaoListener = e -> {
+
+            primeiroNumero = Double.parseDouble(textField.getText());
+
+            JButton botao = (JButton) e.getSource();
+            operador = botao.getText();
+
+            novoNumero = true;
+        };
+
+
+        btnNewButton_12.addActionListener(operacaoListener);
+        btnNewButton_8.addActionListener(operacaoListener);
+        btnNewButton_13.addActionListener(operacaoListener);
+        btnNewButton_5.addActionListener(operacaoListener);
+        btnPotencia.addActionListener(operacaoListener);
+
+        btnNewButton_6.addActionListener(e -> {
+
+            double segundoNumero = Double.parseDouble(textField.getText());
+            double resultado = 0;
+
+            switch (operador) {
+
+                case "+":
+                    resultado = primeiroNumero + segundoNumero;
+                    break;
+
+                case "-":
+                    resultado = primeiroNumero - segundoNumero;
+                    break;
+
+                case "*":
+                    resultado = primeiroNumero * segundoNumero;
+                    break;
+
+                case "/":
+
+                    if (segundoNumero == 0) {
+                        textField.setText("Erro");
+                        novoNumero = true;
+                        operador = "";
+                        return;
+                    }
+
+                    resultado = primeiroNumero / segundoNumero;
+                    break;
+
+                case "^":
+                    resultado = Math.pow(primeiroNumero, segundoNumero);
+                    break;
+
+                default:
+                    return;
+            }
+
+
+            if (Double.isFinite(resultado) && resultado % 1 == 0) {
+
+                textField.setText(
+                    String.format(java.util.Locale.US, "%.0f", resultado)
+                );
+
+            } else {
+
+                textField.setText(String.valueOf(resultado));
+            }
+
+            novoNumero = true;
+            operador = "";
+        });
+
+
+        btnNewButton.addActionListener(e -> {
+
+            textField.setText("0");
+            primeiroNumero = 0;
+            operador = "";
+            novoNumero = true;
+        });
+    }
+}
